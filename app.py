@@ -10,6 +10,9 @@ from io import BytesIO
 app = Flask(__name__)
 
 def create_excel(data):
+    # Crear la URL de Google Maps
+    maps_url = f"https://www.google.com/maps?q={data['position']['latitude']},{data['position']['longitude']}"
+    
     # Crear un DataFrame con los datos
     df = pd.DataFrame([{
         'Dispositivo': data['device']['name'] or data['device']['ident'],
@@ -17,6 +20,7 @@ def create_excel(data):
         'Dirección': data['position']['address'],
         'Latitud': data['position']['latitude'],
         'Longitud': data['position']['longitude'],
+        'URL de Posición': maps_url,
         'Calidad GSM': f"{data['status']['gsm_quality']}% ({data['status']['gsm_status']})",
         'Batería': f"{data['status']['battery_level']}%",
         'Temperatura': f"{data['status']['temperature']}°C",
@@ -81,6 +85,7 @@ def webhook():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
 
 
 
